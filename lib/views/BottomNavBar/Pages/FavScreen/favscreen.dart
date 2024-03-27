@@ -1,85 +1,105 @@
+import 'package:ebooksapp/controller/bookController.dart';
 import 'package:ebooksapp/services/DummyData/dummydata.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class FavScreen extends StatefulWidget {
-  const FavScreen({super.key});
+class FavScreen extends StatelessWidget {
+  //const FavScreen({super.key});
 
-  @override
-  State<FavScreen> createState() => _FavScreenState();
-}
+  final BookController bookCntrlr = Get.put(BookController());
 
-class _FavScreenState extends State<FavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //backgroundColor: Color.fromARGB(255, 8, 20, 88),
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              //backgroundColor: Color.fromARGB(255, 8, 20, 88),
-              title: Text("My Favorites", style: GoogleFonts.poppins(color: Color.fromARGB(255, 8, 20, 88),),),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                height: 700,
-                width: 150,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: GridView.count(
-                    scrollDirection: Axis.vertical,
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    //childAspectRatio: 0.8,
-                    children: books.map((book) => InkWell(
-                      onTap: (){
-                        Navigator.pushNamed(context, "bookdetails", arguments: book["id"]);
-                      },
-                      child: Stack(
-                        children: [
-                          Card(
-                            elevation: 8,
-                            child: Container(
-                              height: 500,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                // border: Border.all(
-                                //   color: Colors.grey,
-                                //   width: 2.0,
-                                // )
-                              ),
-                            ),
-                          ),
-                          Center(
-                            //top: 5,
-                            child: Container(
-                              height: 150,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(book["image"]),
-                                  //fit: BoxFit.fill,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 2,
-                            left: 15,
-                            child: Icon(Icons.favorite, color: Color.fromARGB(255, 8, 20, 88),),
-                          ),
-                        ],
-                      ),
-                    )).toList(),
-                  ),
+        body: Obx(() {
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  //backgroundColor: Color.fromARGB(255, 8, 20, 88),
+                  title: Text("My Favorites", style: GoogleFonts.poppins(color: Color.fromARGB(255, 8, 20, 88),),),
                 ),
-              ),
-            )
-          ],
+                SliverToBoxAdapter(
+                  child: Container(
+                    height: 700,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: GridView.builder(
+                        scrollDirection: Axis.vertical,
+                        //childAspectRatio: 0.8,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                        ),
+                        itemCount: bookCntrlr.wishList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          var favBook = bookCntrlr.wishList[index];
+                          return Card(
+                            child: Stack(
+                            children: [
+                              Card(
+                                elevation: 8,
+                                child: Container(
+                                  height: 500,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15),
+                                    // border: Border.all(
+                                    //   color: Colors.grey,
+                                    //   width: 2.0,
+                                    // )
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                //top: 5,
+                                child: Container(
+                                  height: 150,
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        favBook.volumeInfo?.imageLinks?.thumbnail ?? "No image available"
+                                      ),
+                                      fit: BoxFit.fill,
+                                    ),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(30),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 2,
+                                left: 0,
+                                child: IconButton(
+                                  onPressed: (){
+                                    if(!bookCntrlr.wishList.contains(favBook)){
+                                      bookCntrlr.addToWishList(favBook);
+                                    }
+                                    else{
+                                      bookCntrlr.remFromWishList(favBook);
+                                    }
+                                  },
+                                  icon: CircleAvatar(
+                                    radius: 20,
+                                    child: Icon(Icons.favorite, color: bookCntrlr.wishList.contains(favBook) ? Color.fromARGB(255, 8, 20, 88) : Colors.white,))
+                                ),
+                                //child: Icon(Icons.favorite, color: Color.fromARGB(255, 8, 20, 88),),
+                              ),
+                            ],
+                          ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            );
+          }
         )
     );
   }

@@ -1,33 +1,153 @@
-import 'package:ebooksapp/widgets/booksdet.dart';
-import 'package:ebooksapp/widgets/con_silver_appbar.dart';
-import 'package:ebooksapp/widgets/home_book_cat.dart';
-import 'package:ebooksapp/widgets/mydrawers.dart';
+import 'package:ebooksapp/controller/bookController.dart';
+import 'package:ebooksapp/views/BookDetailsPage/bookdetpage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  final BookController bookCntrlr = Get.put(BookController());
 
-class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    
+    double screenHeight = MediaQuery.of(context).size.height;
+    double appBarHeight = kToolbarHeight + MediaQuery.of(context).padding.top;
+    double bottomNavBarHeight = kBottomNavigationBarHeight;
+
     return Scaffold(
-        drawer: MyDrawer(),
-        body: CustomScrollView(
-            slivers: [
-              ContainerAppBar(),
-              HomeBookCat(text1: "Top Picks"),
-              SliverToBoxAdapter(child: BookDet()),
-              // HomeBookCat(text1: "Recently Added"),
-              // BookDet(),
-              // HomeBookCat(text1: "Recommended"),
-              // BookDet(),
-            ]
-        )
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300.0,
+            floating: true,
+            pinned: false,
+            flexibleSpace: Container(
+              height: 300,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/back.png"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 10,),
+                    Text("Eplore the books!", style: TextStyle(fontSize: 15),),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(child: Center(child: Text("Popular Books", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),))),
+          SliverToBoxAdapter(
+            child: bookCntrlr.isLoading.value
+              ? Center(child: CircularProgressIndicator(),)
+              : bookCntrlr.bookList.isEmpty
+                ? Center(child: Text("No books available"),)
+                : Container(
+                    height: screenHeight - appBarHeight - bottomNavBarHeight,
+                    child: Obx(() {
+                      return GridView.builder(
+                        //physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 15,
+                          childAspectRatio: 0.7,
+                        ),
+                        itemCount: bookCntrlr.bookList.length,
+                        itemBuilder: (context, index) {
+                          final book = bookCntrlr.bookList[index];
+                          String? thumbnail = book.volumeInfo?.imageLinks?.thumbnail;
+                          String? title = book.volumeInfo?.title;
+                          String? desc = book.volumeInfo?.description;
+                          String? authname = book.volumeInfo?.authors?.join(', ');
+                          DateTime? year = book.volumeInfo?.publishedDate;
+                          int? pg = book.volumeInfo?.pageCount;
+                          return InkWell(
+                          onTap: (){
+                            Get.to(BookDet(thumbnail: thumbnail!, title: title!, desc: desc!, authname: authname!, year: year!, pg: pg!,));
+                          },
+                          child: Card(
+                            color: Colors.blue,
+                            child: Stack(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        height: 150,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                thumbnail ?? "no image",
+                                              ),fit: BoxFit.fill
+                                          ),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(15)
+                                          )
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        book.volumeInfo?.title ?? 'No Title',
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Text(
+                                        book.volumeInfo?.authors?.join(', ') ?? 'No Author',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Positioned(
+                                  top: -2,
+                                  right: -5,
+                                  child: Obx(() {
+                                    return IconButton(
+                                      icon: Icon(Icons.favorite, color: bookCntrlr.wishList.contains(book) ? Color.fromARGB(255, 8, 20, 88) : Colors.white,),
+                                      onPressed: (){
+                                        if(!bookCntrlr.wishList.contains(book)){
+                                          bookCntrlr.addToWishList(book);
+                                        }
+                                        else{
+                                          bookCntrlr.remFromWishList(book);
+                                        }
+                                      },
+                                    );
+                                  }),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                ),
+              )
+          ),
+        ],
+      ),
     );
   }
 }
-

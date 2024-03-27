@@ -1,19 +1,21 @@
-import 'package:ebooksapp/model/bookModel.dart';
-import 'package:ebooksapp/services/DummyData/dummydata.dart';
 import 'package:ebooksapp/utils/colors.dart';
 import 'package:ebooksapp/views/ReadScreen/readscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class BookDetailsPage extends StatelessWidget {
-  const BookDetailsPage({super.key});
+class BookDet extends StatelessWidget {
+
+  final String thumbnail;
+  final String title;
+  final String desc;
+  final String authname;
+  final DateTime year;
+  final int pg;
+
+  const BookDet({super.key, required this.thumbnail, required this.title, required this.desc, required this.authname, required this.year, required this.pg});
 
   @override
   Widget build(BuildContext context) {
-
-    final bookId = ModalRoute.of(context)?.settings.arguments;
-    final book = books.firstWhere((element) => element["id"] == bookId);
-
     return Scaffold(
       backgroundColor: dBlue,
       body: CustomScrollView(
@@ -28,12 +30,12 @@ class BookDetailsPage extends StatelessWidget {
                   Container(
                     height: 300,
                     decoration: BoxDecoration(
-                        image: DecorationImage(image: AssetImage(book["image"]))
+                        image: DecorationImage(image: NetworkImage(thumbnail))
                     ),
                   ),
-                  Text(book["book_name"], style: GoogleFonts.poppins(fontSize: 15, color: Colors.white),),
-                  Text(book["author_name"], style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                  Text("${book["year"]}", style: GoogleFonts.poppins(fontSize: 15, color: Colors.white)),
+                  Text(title, style: GoogleFonts.poppins(fontSize: 15, color: Colors.white),),
+                  Text(authname, style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text("${year.year}", style: GoogleFonts.poppins(fontSize: 15, color: Colors.white)),
                 ],
               ),
             ),
@@ -57,16 +59,13 @@ class BookDetailsPage extends StatelessWidget {
                   Text("Description", style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(book["content"]),
+                    child: Text(desc),
                   ),
                   SizedBox(height: 100,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       InkWell(
-                        // onTap: (){
-                        //   Navigator.pushNamed(context, "favpage", arguments: book["id"]);
-                        // },
                         child: MaterialButton(
                           onPressed: (){
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -97,7 +96,6 @@ class BookDetailsPage extends StatelessWidget {
                       ),
                       InkWell(
                           onTap: (){
-                            //Navigator.pushNamed(context, "readbook", arguments: book["content"]);
                           },
                           child: MaterialButton(
                             onPressed: () {
@@ -107,12 +105,6 @@ class BookDetailsPage extends StatelessWidget {
                                 ),
                               );
                             },
-                            // onPressed: (){
-                            //   Navigator.of(context).push(
-                            //     MaterialPageRoute(builder: (context) => ReadScreen(bookId: book["id"]))
-                            //   );
-                            //   //Navigator.pushNamed(context, "readbook", arguments: book["content"]);
-                            // },
                             color: Colors.grey,
                             minWidth: 100,
                             height: 65,
@@ -129,13 +121,12 @@ class BookDetailsPage extends StatelessWidget {
                                 Column(
                                   children: [
                                     Text("Read"),
-                                    Text("${book["pages"]} pages"),
+                                    Text("${pg} pages"),
                                   ],
                                 )
                               ],
                             ),
                           )
-                        //}
                       ),
                     ],
                   ),
