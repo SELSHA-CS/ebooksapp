@@ -10,7 +10,7 @@ class CategoryController extends GetxController {
   ];
 
   var category = ''.obs;
-  var books = <BookModel>[].obs;
+  RxList books = <BookModel>[].obs;
   var isLoading = false.obs;
 
   void onTap(int index) {

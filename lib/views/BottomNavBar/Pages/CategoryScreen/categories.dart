@@ -22,7 +22,6 @@ class CategoryBook extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     double screenHeight = MediaQuery.of(context).size.height;
     double appBarHeight = kToolbarHeight + MediaQuery.of(context).padding.top;
     double bottomNavBarHeight = kBottomNavigationBarHeight;

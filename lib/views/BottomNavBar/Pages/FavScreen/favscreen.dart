@@ -1,5 +1,6 @@
 import 'package:ebooksapp/controller/bookController.dart';
 import 'package:ebooksapp/services/DummyData/dummydata.dart';
+import 'package:ebooksapp/views/BookDetailsPage/bookdetpage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,61 +37,79 @@ class FavScreen extends StatelessWidget {
                         itemCount: bookCntrlr.wishList.length,
                         itemBuilder: (BuildContext context, int index) {
                           var favBook = bookCntrlr.wishList[index];
-                          return Card(
-                            child: Stack(
-                            children: [
-                              Card(
-                                elevation: 8,
-                                child: Container(
-                                  height: 500,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(15),
-                                    // border: Border.all(
-                                    //   color: Colors.grey,
-                                    //   width: 2.0,
-                                    // )
+                          String? thumbnail = favBook.volumeInfo?.imageLinks?.thumbnail ?? "";
+                          String? title = favBook.volumeInfo?.title ?? "";
+                          String? desc = favBook.volumeInfo?.description ?? "";
+                          String? authname = favBook.volumeInfo?.authors?.join(', ') ?? "";
+                          DateTime? year = favBook.volumeInfo?.publishedDate ?? DateTime.now();
+                          int? pg = favBook.volumeInfo?.pageCount ?? 0;
+                          return InkWell(
+                            onTap: (){
+                              Get.to(BookDet(
+                                thumbnail: thumbnail!, 
+                                title: title!, 
+                                desc: desc!, 
+                                authname: authname!, 
+                                year: year!, 
+                                pg: pg!
+                              ));
+                            },
+                            child: Card(
+                              child: Stack(
+                              children: [
+                                Card(
+                                  elevation: 8,
+                                  child: Container(
+                                    height: 500,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      // border: Border.all(
+                                      //   color: Colors.grey,
+                                      //   width: 2.0,
+                                      // )
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Center(
-                                //top: 5,
-                                child: Container(
-                                  height: 150,
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        favBook.volumeInfo?.imageLinks?.thumbnail ?? "No image available"
+                                Center(
+                                  //top: 5,
+                                  child: Container(
+                                    height: 150,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          thumbnail ?? "No image available"
+                                        ),
+                                        fit: BoxFit.fill,
                                       ),
-                                      fit: BoxFit.fill,
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(30),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 2,
-                                left: 0,
-                                child: IconButton(
-                                  onPressed: (){
-                                    if(!bookCntrlr.wishList.contains(favBook)){
-                                      bookCntrlr.addToWishList(favBook);
-                                    }
-                                    else{
-                                      bookCntrlr.remFromWishList(favBook);
-                                    }
-                                  },
-                                  icon: CircleAvatar(
-                                    radius: 20,
-                                    child: Icon(Icons.favorite, color: bookCntrlr.wishList.contains(favBook) ? Color.fromARGB(255, 8, 20, 88) : Colors.white,))
+                                Positioned(
+                                  top: 2,
+                                  left: 0,
+                                  child: IconButton(
+                                    onPressed: (){
+                                      if(!bookCntrlr.wishList.contains(favBook)){
+                                        bookCntrlr.addToWishList(favBook);
+                                      }
+                                      else{
+                                        bookCntrlr.remFromWishList(favBook);
+                                      }
+                                    },
+                                    icon: CircleAvatar(
+                                      radius: 20,
+                                      child: Icon(Icons.favorite, color: bookCntrlr.wishList.contains(favBook) ? Color.fromARGB(255, 8, 20, 88) : Colors.white,))
+                                  ),
+                                  //child: Icon(Icons.favorite, color: Color.fromARGB(255, 8, 20, 88),),
                                 ),
-                                //child: Icon(Icons.favorite, color: Color.fromARGB(255, 8, 20, 88),),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                            ),
                           );
                         },
                       ),
