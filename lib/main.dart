@@ -1,3 +1,4 @@
+import 'package:ebooksapp/views/BottomNavBar/Pages/CategoryScreen/categoryscreen.dart';
 import 'package:ebooksapp/views/SplashScreen/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
-        // initialRoute: '/',
+        //home: SplashScreen(),
+        initialRoute: '/',
+        getPages: [
+          GetPage(name: '/', page: () => SplashScreen()),
+          GetPage(name: '/category', page: () => CategoryPage(categoryname: '',)),
+        ],
         // routes: {
         //   '/': (context) => SplashScreen(),
         //   'bookdetails': (context) => BookDetailsPage(),

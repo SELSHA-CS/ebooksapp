@@ -62,15 +62,15 @@ class HomeScreen extends StatelessWidget {
                         itemCount: bookCntrlr.bookList.length,
                         itemBuilder: (context, index) {
                           final book = bookCntrlr.bookList[index];
-                          String? thumbnail = book.volumeInfo?.imageLinks?.thumbnail;
-                          String? title = book.volumeInfo?.title;
-                          String? desc = book.volumeInfo?.description;
-                          String? authname = book.volumeInfo?.authors?.join(', ');
-                          DateTime? year = book.volumeInfo?.publishedDate;
-                          int? pg = book.volumeInfo?.pageCount;
+                          String? thumbnail = book.thumbnailUrl;
+                          String? title = book.title;
+                          String? desc = book.description;
+                          String? authname = book.author;
+                          String? year = book.publishedDate;
+                          int? pg = book.pageCount;
                           return InkWell(
                           onTap: (){
-                            Get.to(BookDet(thumbnail: thumbnail!, title: title!, desc: desc!, authname: authname!, year: year!, pg: pg!,));
+                            Get.to(BookDet(thumbnail: thumbnail, title: title, desc: desc, authname: authname, year: year, pg: pg,));
                           },
                           child: Card(
                             color: Colors.blue,
@@ -98,7 +98,7 @@ class HomeScreen extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        book.volumeInfo?.title ?? 'No Title',
+                                        title ?? 'No Title',
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -110,7 +110,7 @@ class HomeScreen extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                       child: Text(
-                                        book.volumeInfo?.authors?.join(', ') ?? 'No Author',
+                                        authname ?? 'No Author',
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontStyle: FontStyle.italic,

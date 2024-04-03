@@ -4,17 +4,17 @@ import 'package:get/get.dart';
 
 class BookController extends GetxController {
   var isLoading = true.obs;
-  RxList<Item> bookList = RxList<Item>();
+  RxList<BookModel> bookList = RxList<BookModel>();
 
-  final RxList<Item> _wishList = <Item>[].obs;
-  RxList<Item> get wishList => _wishList;
+  final RxList<BookModel> _wishList = <BookModel>[].obs;
+  RxList<BookModel> get wishList => _wishList;
 
-  void addToWishList(Item favBook){
+  void addToWishList(BookModel favBook){
     _wishList.add(favBook);
     print(_wishList);
   }
 
-  void remFromWishList(Item favBook){
+  void remFromWishList(BookModel favBook){
     _wishList.remove(favBook);
     print(_wishList);
   }
@@ -30,7 +30,7 @@ class BookController extends GetxController {
       isLoading(true);
       var books = await BookService.fetchBooks();
       final List<dynamic> items = books['items'];
-      bookList.assignAll(items.map((item) => Item.fromJson(item)).toList());
+      bookList.assignAll(items.map((item) => BookModel.fromJson(item)).toList());
     } catch (e) {
       print(e);
       bookList.clear(); // Clear bookList if there's an error

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:ebooksapp/model/bookModel.dart';
+import 'package:ebooksapp/views/BottomNavBar/Pages/CategoryScreen/categoryscreen.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,12 +11,13 @@ class CategoryController extends GetxController {
   ];
 
   var category = ''.obs;
-  RxList books = <BookModel>[].obs;
+  var books = <BookModel>[].obs;
   var isLoading = false.obs;
 
-  void onTap(int index) {
+  void onTap({required int index}) {
     category.value = categoryList[index].toLowerCase();
     fetchData(category.value);
+    Get.to(() => CategoryPage(categoryname: category.value));
   }
 
   Future<void> fetchData(String category) async {
@@ -24,7 +26,7 @@ class CategoryController extends GetxController {
 
     try {
       final response = await http.get(url);
-
+      
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodeddata = jsonDecode(response.body);
         if (decodeddata['items'] != null) {

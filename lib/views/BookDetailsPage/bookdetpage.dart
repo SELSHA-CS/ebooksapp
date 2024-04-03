@@ -9,7 +9,7 @@ class BookDet extends StatelessWidget {
   final String title;
   final String desc;
   final String authname;
-  final DateTime year;
+  final String year;
   final int pg;
 
   const BookDet({super.key, required this.thumbnail, required this.title, required this.desc, required this.authname, required this.year, required this.pg});
@@ -35,7 +35,7 @@ class BookDet extends StatelessWidget {
                   ),
                   Text(title, style: GoogleFonts.poppins(fontSize: 15, color: Colors.white),),
                   Text(authname, style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                  Text("${year.year}", style: GoogleFonts.poppins(fontSize: 15, color: Colors.white)),
+                  Text(year, style: GoogleFonts.poppins(fontSize: 15, color: Colors.white)),
                 ],
               ),
             ),

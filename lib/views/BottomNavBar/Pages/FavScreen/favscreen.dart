@@ -37,12 +37,12 @@ class FavScreen extends StatelessWidget {
                         itemCount: bookCntrlr.wishList.length,
                         itemBuilder: (BuildContext context, int index) {
                           var favBook = bookCntrlr.wishList[index];
-                          String? thumbnail = favBook.volumeInfo?.imageLinks?.thumbnail ?? "";
-                          String? title = favBook.volumeInfo?.title ?? "";
-                          String? desc = favBook.volumeInfo?.description ?? "";
-                          String? authname = favBook.volumeInfo?.authors?.join(', ') ?? "";
-                          DateTime? year = favBook.volumeInfo?.publishedDate ?? DateTime.now();
-                          int? pg = favBook.volumeInfo?.pageCount ?? 0;
+                          String? thumbnail = favBook.thumbnailUrl ?? "";
+                          String? title = favBook.title ?? "";
+                          String? desc = favBook.description ?? "";
+                          String? authname = favBook.author ?? "";
+                          String? year = favBook.publishedDate ?? "";
+                          int? pg = favBook.pageCount ?? 0;
                           return InkWell(
                             onTap: (){
                               Get.to(BookDet(
