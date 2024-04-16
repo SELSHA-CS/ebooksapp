@@ -1,5 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:ebooksapp/controller/bottomcontroller.dart';
+import 'package:ebooksapp/views/BottomNavBar/Pages/SearchScreen/searchscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +15,7 @@ class BottomNavBar extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(onPressed: () {
-        //Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchPage()));
       },
         child: Icon(Icons.book, color: Colors.white,),
         shape: CircleBorder(),

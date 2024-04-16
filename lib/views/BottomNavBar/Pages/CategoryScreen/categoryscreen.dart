@@ -30,12 +30,12 @@ class CategoryPage extends StatelessWidget {
             itemCount: catCntrl.books.length,
             itemBuilder: (context, index) {
               final bookCat = catCntrl.books[index];
-              String? thumbnail = bookCat.thumbnailUrl ?? "";
-              String? title = bookCat.title ?? "";
-              String? desc = bookCat.description ?? "";
-              String? authname = bookCat.author ?? "";
-              String? year = bookCat.publishedDate ?? "";
-              int? pg = bookCat.pageCount ?? 0;
+              String? thumbnail = bookCat.thumbnailUrl;
+              String? title = bookCat.title;
+              String? desc = bookCat.description;
+              String? authname = bookCat.author;
+              String? year = bookCat.publishedDate;
+              int? pg = bookCat.pageCount;
               return InkWell(
                 onTap: () {
                   Get.to(BookDet(
